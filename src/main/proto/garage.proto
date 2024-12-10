@@ -1,0 +1,86 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "isa.example.garage.grpc";
+option java_outer_classname = "GarageProto";
+package garage;
+// Timeslot Service
+service TimeslotService {
+  rpc GetTimeslots (TimeslotRequest) returns (TimeslotResponse);
+}
+service BookingService {
+  rpc GetBookingsByDate(GetBookingsByDateRequest) returns (GetBookingsByDateResponse);
+  rpc BookingAccept(GetBookingAcceptRequest) returns (GetBookingAcceptResponse);
+  rpc BookingReject(GetBookingRejectRequest) returns (GetBookingRejectResponse);
+  rpc GetAcceptBookings(GetAcceptedBookingRequest) returns (GetAcceptedBookingResponse);
+}
+service GarageProvideService {
+  rpc GetGarageService (GarageServiceRequest) returns (GarageServiceResponse);
+}
+message GarageServiceRequest{}
+message GarageServiceResponse{
+  repeated ProvideService provideService =1;
+}
+message ProvideService{
+  int64 serviceId = 1;
+  string serviceName = 2;
+  string vehicleType = 3;
+}
+message TimeslotRequest {
+  string serviceDate = 1;
+}
+message TimeslotResponse {
+  repeated Timeslot timeslots = 1;
+}
+message GetBookingsByDateRequest { }
+message GetBookingsByDateResponse {
+  repeated Booking bookings = 1;
+}
+message GetBookingAcceptRequest{
+  int64 bookingId = 1;
+  int64 userId = 2;
+}
+message GetBookingAcceptResponse{ }
+message GetBookingRejectRequest{
+  int64 bookingId = 1;
+  int64 userId = 2;
+  string message = 3;
+}
+message GetBookingRejectResponse{ }
+message GetAcceptedBookingRequest{
+}
+message GetAcceptedBookingResponse {
+  repeated Booking bookings = 1;
+}
+message Timeslot {
+  int32 slotId = 1;
+  string serviceDate = 2;
+  string startTime = 3;
+  string endTime = 4;
+  int32 maxNoVehicle = 5;
+  int32 availableCount = 6;
+  VehicleStatus vehicleStatus = 7;
+}
+enum VehicleStatus {
+  AVAILABLE = 0;
+  NOT_AVAILABLE = 1;
+}
+message Booking {
+  int64 bookingId = 1;
+  int64 userId = 2;
+  int32 slotId = 3;
+  string serviceId = 4;
+  string serviceName = 5;
+  ServiceStatus serviceAcceptStatus = 6;
+  string createdAt = 7;
+  string vehicleNo = 8;
+  string vehicleType = 9;
+  string vehicleBrand = 10;
+  string vehicleModel = 11;
+  string fuelType = 12;
+  string bookingDate = 13;
+}
+enum ServiceStatus {
+  PENDING = 0;
+  ACCEPTED = 1;
+  REJECTED = 2;
+}

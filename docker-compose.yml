@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  customer-service-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://customer-service-db:3306/customer_service
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+    depends_on:
+      - customer-service-database
+
+  customer-service-database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: customer_service
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+  customer-service-frontend:
+    build:
+      context: ../../garage-app-repo-new/customer-service-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - customer-service-backend
